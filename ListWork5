@@ -1,0 +1,100 @@
+//ListWork5. Дан односвязный линейный список и указатель на голову списка P1. 
+//Необходимо вывести указатель на шестой элемент этого списка P6.Известно, 
+//что в исходном списке не менее 6 элементов.
+
+#include <iostream>
+#include <string>
+#include <cctype>
+
+using namespace std;
+
+bool IsNumber(const  string& str) {
+    if (str.empty()) return false;
+    int start = (str[0] == '-' || str[0] == '+') ? 1 : 0;
+    for (int i = start; i < str.length(); ++i) {
+        if (!isdigit(str[i])) return false;
+    }
+    return start < str.length();
+}
+struct Node {
+    int data;
+    Node* next;
+};
+
+void add(Node*& head, int num) {  // Добавление элемента
+    Node* newNode = new Node{ num, nullptr };
+    if (!head) {
+        head = newNode;
+        return;
+    }
+
+    Node* temp = head;
+    while (temp->next) {
+        temp = temp->next;
+    }
+    temp->next = newNode;
+}
+
+void show(Node* head) {  // Вывод списка
+    while (head) {
+        cout << head->data << " ";
+        head = head->next;
+    }
+    cout << endl;
+}
+
+void cleansing(Node*& head) { //очищение памяти
+    while (head) {
+        Node* temp = head;
+        head = head->next;
+        delete temp;
+    }
+}
+
+int main() {
+    setlocale(LC_ALL, "ru");
+    Node* P1 = nullptr; // Голова списка
+    int n, num;
+    string in, inum;
+    cout << "Введите количество элементов в списке (не менее 6): ";
+    cin >> in;
+    if (!IsNumber(in)) {
+        cout << "Недопустимое значение.";
+        return 1;
+    }
+    else {
+        n = stoi(in);
+    }
+    if (n < 6) {
+        cout << "Количество элементов в списке должно быть не менее 6."<<endl;
+        return 1;
+    }
+    cout << "Введите элементы списка: ";
+    for (int i = 1; i <= n; i++) {
+        cin >> inum;
+        if (!IsNumber(inum)) {
+            cout << "Недопустимое значение.";
+            return 1;
+        }
+        else {
+            num = stoi(in);
+            add(P1, num);
+        }
+    }
+
+    cout << "Список: ";
+    show(P1);
+
+    Node* temp = P1;
+    int cnt = 1;
+    while (cnt < 6 && temp != nullptr) {
+        temp = temp->next;
+        cnt++;
+    }
+    cout << "Шестой элемент(Р6): " << temp->data << endl;
+    cout << "Указатель на шестой элемент(Р6): " << temp;
+
+    cleansing(P1);
+    
+    return 0;
+}
