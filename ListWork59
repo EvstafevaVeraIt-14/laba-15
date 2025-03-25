@@ -1,0 +1,115 @@
+//ListWork59.Дан односвязный линейный список и указатель на голову списка P1.
+//Необходимо вставить значение M после каждого K - го элемента списка и 
+//вывести ссылку на последний элемент полученного списка P2.
+#include <iostream>
+#include <string>
+#include <cctype>
+
+using namespace std;
+
+bool IsNumber(const  string& str) {
+    if (str.empty()) return false;
+    int start = (str[0] == '-' || str[0] == '+') ? 1 : 0;
+    for (int i = start; i < str.length(); ++i) {
+        if (!isdigit(str[i])) return false;
+    }
+    return start < str.length();
+}
+struct Node {
+    int data;
+    Node* next;
+};
+
+void add(Node*& head, int num) {  // Добавление элемента
+    Node* newNode = new Node{ num, nullptr };
+    if (!head) {
+        head = newNode;
+        return;
+    }
+
+    Node* temp = head;
+    while (temp->next) {
+        temp = temp->next;
+    }
+    temp->next = newNode;
+}
+
+void show(Node* head) {  // Вывод списка
+    while (head) {
+        cout << head->data << " ";
+        head = head->next;
+    }
+    cout << endl;
+}
+
+void cleansing(Node*& head) { //очищение памяти
+    while (head) {
+        Node* temp = head;
+        head = head->next;
+        delete temp;
+    }
+}
+
+int main() {
+    setlocale(LC_ALL, "ru");
+    Node* P1 = nullptr; // Голова списка
+    string in, inum;
+    int n, num;
+    cout << "Введите количество элементов в списке: ";
+    cin >> in;
+    if (!IsNumber(in)) {
+        cout << "Недопустимое значение.";
+        return 1;
+    }
+    else {
+        n = stoi(in);
+    }
+    cout << "Введите элементы списка: ";
+    for (int i = 1; i <= n; i++) {
+        cin >> inum;
+        if (!IsNumber(inum)) {
+            cout << "Недопустимое значение.";
+            return 1;
+        }
+        else {
+            num = stoi(inum);
+            add(P1, num);
+        }
+        
+    }
+    cout << endl;
+    cout << "Изначальный список: ";
+    show(P1);
+    cout << endl;
+    int k;
+    cout << "Введите значение к (после каждого к-го элемента добавляется новый элемент): ";
+    cin >> k;
+    int M;
+    cout << "Введите значение M: ";
+    cin >> M;
+    Node* temp = P1;
+    int count = 1;
+    while (temp) {
+        if (count % k == 0) {
+            Node* newNode = new Node;
+            newNode->data = M;
+            newNode->next = temp->next;
+            temp->next = newNode;
+            temp = newNode;
+        }
+        temp = temp->next;
+        count++;
+    }
+    cout << "Измененный список: ";
+    show(P1);
+    cout << endl;
+    Node* P2 = P1;
+    while (P2->next) {
+        P2 = P2->next;
+    }
+    cout << "Последний элемент измененного списка: " << P2->data << endl;
+    cout << "Ссылка на последний элемент: " << P2 << endl;
+
+    cleansing(P1);
+    return 0;
+}
