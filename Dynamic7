@@ -1,0 +1,95 @@
+//Dynamic7. Дан указатель P1 на вершину стека (если стек пуст, то P1 = nullptr).
+//Извлечь из стека все элементы и вывести их значения.Вывести также количество извлеченных 
+//элементов N(для пустого стека вывести 0).После извлечения элементов из стека освобождать 
+//память, которую они занимали.
+#include <iostream>
+#include <string>
+#include <cctype>
+using namespace std;
+bool IsNumber(const  string& str) {
+    if (str.empty()) return false;
+    int start = (str[0] == '-' || str[0] == '+') ? 1 : 0;
+    for (int i = start; i < str.length(); ++i) {
+        if (!isdigit(str[i])) return false;
+    }
+    return start < str.length();
+}
+
+class Stack {
+private:
+    struct Node {
+        int data;
+        Node* next;
+    };
+
+    Node* p1; // Голова
+
+public:
+    Stack() : p1(nullptr) {}
+
+    void push(int num) {  // Добавление элемента в стек
+        Node* newNode = new Node;
+        newNode->data = num;
+        newNode->next = p1;
+        p1 = newNode;
+    }
+
+    bool pop(int& num) {  // Извлечение элемента из стека
+        if (!p1) {
+            return false;
+        }
+        Node* temp = p1;
+        num = temp->data;
+        p1 = p1->next;
+        delete temp;
+        return true;
+    }
+
+
+    void CountShow() {  // Извлечение всех элементов, их вывод и освобождение памяти
+        int num, count = 0;
+        while (pop(num)) {
+            cout << num << " ";
+            count++;
+        }
+        cout << endl;
+        cout << "Количество извлеченных элементов: " << count << endl;
+    }
+
+};
+
+int main() {
+    setlocale(LC_ALL, "ru");
+    Stack s;
+    string in;
+    string inum;
+    int num;
+    int n;
+    cout << "Введите количество элементов, которые хотите добавить в стек: ";
+    cin >> in;
+    if (!IsNumber(in)){
+        cout << "Недопустимое значение.";
+        return 1;
+    }
+    else {
+        n = stoi(in);
+    }
+    cout << "Введите элементы стека: ";
+    for (int i = 0; i < n; i++) {
+        cin >> inum;
+        if (!IsNumber(inum)) {
+            cout << "Недопустимое значение.";
+            return 1;
+        }
+        else {
+            num = stoi(inum);
+            s.push(num);
+        }
+        
+    }
+    cout << endl;
+    cout << "Извлеченные элементы из стека: ";
+    s.CountShow();
+
+    return 0;
+}
