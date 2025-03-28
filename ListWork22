@@ -21,39 +21,72 @@ struct Node {
     Node* next;
 };
 
-void add(Node*& head, int num) {  // Добавление элемента
-    Node* newNode = new Node{ num, nullptr };
-    if (!head) {
-        head = newNode;
-        return;
-    }
+class spisok {
+private:
+    Node* head;
+public:
+    spisok() : head(nullptr) {}
 
-    Node* temp = head;
-    while (temp->next) {
-        temp = temp->next;
-    }
-    temp->next = newNode;
-}
+    void add(int num) {  // Добавление элемента
+        Node* newNode = new Node{ num, nullptr };
+        if (!head) {
+            head = newNode;
+            return;
+        }
 
-void show(Node* head) {  // Вывод списка
-    while (head) {
-        cout << head->data << " ";
-        head = head->next;
-    }
-    cout << endl;
-}
-
-void cleansing(Node*& head) { //очищение памяти
-    while (head) {
         Node* temp = head;
-        head = head->next;
-        delete temp;
+        while (temp->next) {
+            temp = temp->next;
+        }
+        temp->next = newNode;
     }
-}
+
+    void show() {  // Вывод списка
+        Node* temp = head;
+        while (temp) {
+            cout << temp->data << " ";
+            temp = temp->next;
+        }
+        cout << endl;
+    }
+    void fun(int M) {
+        Node* temp = head;
+        int count = 1;
+        while (temp) {
+            if (count % 2 == 0) {
+                Node* newNode = new Node;
+                newNode->data = M;
+                newNode->next = temp->next;
+                temp->next = newNode;
+                temp = newNode;
+            }
+            temp = temp->next;
+            count++;
+        }
+    }
+    void posl() {
+        Node* P2 = head;
+        while (P2->next) {
+            P2 = P2->next;
+        }
+        cout << "Последний элемент измененного списка: " << P2->data << endl;
+        cout << "Ссылка на последний элемент: " << P2 << endl;
+    }
+
+
+    void cleansing() { //очищение памяти
+        while (head) {
+            Node* temp = head;
+            head = head->next;
+            delete temp;
+        }
+    }
+};
 
 int main() {
     setlocale(LC_ALL, "ru");
     Node* P1 = nullptr; // Голова списка
+    spisok s;
     string in, inum;
     int n, num;
     cout << "Введите количество элементов в списке: ";
@@ -74,39 +107,21 @@ int main() {
         }
         else {
             num = stoi(inum);
-            add(P1, num);
+            s.add(num);
         }
     }
     cout << endl;
     cout << "Изначальный список: ";
-    show(P1);
+    s.show();
     cout << endl;
     int M;
     cout << "Введите значение M: ";
     cin >> M;
-    Node* temp = P1;
-    int count = 1;
-    while (temp) {
-        if (count % 2 == 0) {
-            Node* newNode = new Node;
-            newNode->data = M;
-            newNode->next = temp->next;
-            temp->next = newNode;
-            temp = newNode;
-        }
-        temp = temp->next;
-        count++;
-    }
+    s.fun(M);
     cout << "Измененный список: ";
-    show(P1);
+    s.show();
+    s.posl();
     cout << endl;
-    Node* P2 = P1;
-    while (P2->next) {
-        P2 = P2->next;
-    }
-    cout << "Последний элемент измененного списка: " << P2 -> data<< endl;
-    cout << "Ссылка на последний элемент: " << P2 << endl;
-
-    cleansing(P1);
+    s.cleansing();
     return 0;
 }
